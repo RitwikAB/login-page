@@ -77,6 +77,4 @@ LoginContainer.defaultProps = {
   padding: 20
 };
 
-// console.log(<T id="password_placeholder" />.props);
-
 export default injectIntl(LoginContainer);
