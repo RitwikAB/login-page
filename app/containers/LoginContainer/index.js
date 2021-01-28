@@ -1,9 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
+import { loginContainerCreators } from './reducer';
 import T from '@components/T';
 
 const Container = styled.div`
@@ -17,10 +20,9 @@ const Container = styled.div`
   }
 `;
 
-const LoginContainer = ({ maxwidth, padding }) => {
+const LoginContainer = ({ maxwidth, padding, dispatchSetUserData, intl }) => {
   const onFinish = values => {
-    // eslint-disable-next-line no-console
-    console.log('Received values of form: ', values);
+    dispatchSetUserData(values.username, values.password);
   };
 
   return (
@@ -39,27 +41,34 @@ const LoginContainer = ({ maxwidth, padding }) => {
           rules={[
             {
               required: true,
-              message: 'Please input your Username!'
+              message: `${intl.formatMessage({ id: 'valid_username' })}`
             }
           ]}
         >
-          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+          <Input
+            prefix={<UserOutlined className="site-form-item-icon" />}
+            placeholder={intl.formatMessage({ id: 'username_placeholder' })}
+          />
         </Form.Item>
         <Form.Item
           name="password"
           rules={[
             {
               required: true,
-              message: 'Please input your Password!'
+              message: `${intl.formatMessage({ id: 'valid_password' })}`
             }
           ]}
         >
-          <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" placeholder="Password" />
+          <Input
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            type="password"
+            placeholder={intl.formatMessage({ id: 'password_placeholder' })}
+          />
         </Form.Item>
 
         <Form.Item>
           <Button type="primary" htmlType="submit" className="login-form-button">
-            Log in
+            <T id="log_in" />
           </Button>
         </Form.Item>
       </Form>
@@ -68,6 +77,8 @@ const LoginContainer = ({ maxwidth, padding }) => {
 };
 
 LoginContainer.propTypes = {
+  dispatchSetUserData: PropTypes.func,
+  intl: PropTypes.object,
   maxwidth: PropTypes.number,
   padding: PropTypes.number
 };
@@ -77,4 +88,19 @@ LoginContainer.defaultProps = {
   padding: 20
 };
 
-export default injectIntl(LoginContainer);
+const mapDispatchToProps = dispatch => {
+  const { setUser } = loginContainerCreators;
+  return {
+    dispatchSetUserData: (username, password) => dispatch(setUser(username, password))
+  };
+};
+
+const withConnect = connect(
+  null,
+  mapDispatchToProps
+);
+
+export default compose(
+  injectIntl,
+  withConnect
+)(LoginContainer);

@@ -12,5 +12,11 @@
   "repository_stars": "Repository stars: {stars}",
   "wednesday_solutions": "Wednesday Solutions",
   "login_page": "Login Page",
-  "password_placeholder": "Password"
+  "password_placeholder": "Password",
+  "username_placeholder": "Username",
+  "valid_username": "Please input your Username!",
+  "valid_password": "Please input your Password!",
+  "log_in": "Log In",
+  "sign_out": "Sign Out",
+  "access_denied": "Access Denied"
 }

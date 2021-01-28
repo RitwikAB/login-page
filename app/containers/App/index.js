@@ -8,7 +8,9 @@
  */
 
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { createStructuredSelector } from 'reselect';
+import { connect } from 'react-redux';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import map from 'lodash/map';
@@ -20,13 +22,14 @@ import GlobalStyle from '@app/global-styles';
 import { colors } from '@themes';
 // import Header from '@components/Header';
 import For from '@components/For';
+import { selectUsername } from './selectors';
 
 const theme = {
   fg: colors.primary,
   bg: colors.secondary
 };
 
-export function App({ location }) {
+export function App({ location, currentUser }) {
   return (
     <ThemeProvider theme={theme}>
       {/* <Header /> */}
@@ -46,6 +49,9 @@ export function App({ location }) {
                     ...props,
                     ...routeConfig[routeKey].props
                   };
+                  if (routeKey === 'login') {
+                    return currentUser ? <Redirect to="/home" /> : <Component {...updatedProps} />;
+                  }
                   return <Component {...updatedProps} />;
                 }}
               />
@@ -57,7 +63,19 @@ export function App({ location }) {
     </ThemeProvider>
   );
 }
+
 App.propTypes = {
-  location: PropTypes.object
+  location: PropTypes.object,
+  currentUser: PropTypes.string
 };
-export default compose(withRouter)(App);
+
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectUsername()
+});
+
+const withConnect = connect(mapStateToProps);
+
+export default compose(
+  withRouter,
+  withConnect
+)(App);

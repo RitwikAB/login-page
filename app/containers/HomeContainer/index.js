@@ -6,15 +6,16 @@ import { compose } from 'redux';
 import get from 'lodash/get';
 import debounce from 'lodash/debounce';
 import isEmpty from 'lodash/isEmpty';
-import { Card, Skeleton, Input } from 'antd';
+import { Card, Skeleton, Input, Button } from 'antd';
 import styled from 'styled-components';
 import { injectIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import T from '@components/T';
-import Clickable from '@components/Clickable';
 import { useInjectSaga } from 'utils/injectSaga';
 import { selectHomeContainer, selectReposData, selectReposError, selectRepoName } from './selectors';
+import { selectUsername } from '../App/selectors';
 import { homeContainerCreators } from './reducer';
+import { loginContainerCreators } from '../LoginContainer/reducer';
 import saga from './saga';
 
 const { Search } = Input;
@@ -44,10 +45,12 @@ const RightContent = styled.div`
 export function HomeContainer({
   dispatchGithubRepos,
   dispatchClearGithubRepos,
+  dispatchSignOutUser,
   intl,
-  reposData = {},
-  reposError = null,
+  reposData,
+  reposError,
   repoName,
+  username,
   maxwidth,
   padding
 }) {
@@ -125,27 +128,44 @@ export function HomeContainer({
       )
     );
   };
-  const refreshPage = () => {
-    history.push('stories');
-    window.location.reload();
+  const redirectToLoginPage = () => {
+    history.push('/');
   };
   return (
     <Container maxwidth={maxwidth} padding={padding}>
-      <RightContent>
-        <Clickable textId="stories" onClick={refreshPage} />
-      </RightContent>
-      <CustomCard title={intl.formatMessage({ id: 'repo_search' })} maxwidth={maxwidth}>
-        <T marginBottom={10} id="get_repo_details" />
-        <Search
-          data-testid="search-bar"
-          defaultValue={repoName}
-          type="text"
-          onChange={evt => debouncedHandleOnChange(evt.target.value)}
-          onSearch={searchText => debouncedHandleOnChange(searchText)}
-        />
-      </CustomCard>
-      {renderRepoList()}
-      {renderErrorState()}
+      {username ? (
+        <React.Fragment>
+          <RightContent>
+            <Button
+              type="primary"
+              onClick={() => {
+                dispatchSignOutUser();
+                redirectToLoginPage();
+              }}
+            >
+              <T id="sign_out" />
+            </Button>
+          </RightContent>
+          <CustomCard title={intl.formatMessage({ id: 'repo_search' })} maxwidth={maxwidth}>
+            <T marginBottom={10} id="get_repo_details" />
+            <Search
+              data-testid="search-bar"
+              defaultValue={repoName}
+              type="text"
+              onChange={evt => debouncedHandleOnChange(evt.target.value)}
+              onSearch={searchText => debouncedHandleOnChange(searchText)}
+            />
+          </CustomCard>
+          {renderRepoList()}
+          {renderErrorState()}
+        </React.Fragment>
+      ) : (
+        <CustomCard title={intl.formatMessage({ id: 'access_denied' })} maxwidth={maxwidth}>
+          <Button type="primary" onClick={redirectToLoginPage}>
+            <T id="log_in" />
+          </Button>
+        </CustomCard>
+      )}
     </Container>
   );
 }
@@ -153,6 +173,7 @@ export function HomeContainer({
 HomeContainer.propTypes = {
   dispatchGithubRepos: PropTypes.func,
   dispatchClearGithubRepos: PropTypes.func,
+  dispatchSignOutUser: PropTypes.func,
   intl: PropTypes.object,
   reposData: PropTypes.shape({
     totalCount: PropTypes.number,
@@ -161,12 +182,15 @@ HomeContainer.propTypes = {
   }),
   reposError: PropTypes.object,
   repoName: PropTypes.string,
+  username: PropTypes.string,
   history: PropTypes.object,
   maxwidth: PropTypes.number,
   padding: PropTypes.number
 };
 
 HomeContainer.defaultProps = {
+  reposData: {},
+  reposError: null,
   maxwidth: 500,
   padding: 20
 };
@@ -175,14 +199,17 @@ const mapStateToProps = createStructuredSelector({
   homeContainer: selectHomeContainer(),
   reposData: selectReposData(),
   reposError: selectReposError(),
-  repoName: selectRepoName()
+  repoName: selectRepoName(),
+  username: selectUsername()
 });
 
 function mapDispatchToProps(dispatch) {
   const { requestGetGithubRepos, clearGithubRepos } = homeContainerCreators;
+  const { signOutUser } = loginContainerCreators;
   return {
     dispatchGithubRepos: repoName => dispatch(requestGetGithubRepos(repoName)),
-    dispatchClearGithubRepos: () => dispatch(clearGithubRepos())
+    dispatchClearGithubRepos: () => dispatch(clearGithubRepos()),
+    dispatchSignOutUser: () => dispatch(signOutUser())
   };
 }
 
