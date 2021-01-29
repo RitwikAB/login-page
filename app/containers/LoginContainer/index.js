@@ -22,8 +22,10 @@ const Container = styled.div`
 
 const LoginContainer = ({ maxwidth, padding, dispatchSetUserData, intl }) => {
   const onFinish = values => {
-    dispatchSetUserData(values.username, values.password);
+    dispatchSetUserData(values.email, values.password);
   };
+
+  // const validatePassword = (pwd) =>
 
   return (
     <Container maxwidth={maxwidth} padding={padding}>
@@ -37,17 +39,21 @@ const LoginContainer = ({ maxwidth, padding, dispatchSetUserData, intl }) => {
         onFinish={onFinish}
       >
         <Form.Item
-          name="username"
+          name="email"
           rules={[
             {
+              type: 'email',
+              message: `${intl.formatMessage({ id: 'valid_email' })}`
+            },
+            {
               required: true,
-              message: `${intl.formatMessage({ id: 'valid_username' })}`
+              message: `${intl.formatMessage({ id: 'require_email' })}`
             }
           ]}
         >
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder={intl.formatMessage({ id: 'username_placeholder' })}
+            placeholder={intl.formatMessage({ id: 'email_placeholder' })}
           />
         </Form.Item>
         <Form.Item
@@ -55,13 +61,14 @@ const LoginContainer = ({ maxwidth, padding, dispatchSetUserData, intl }) => {
           rules={[
             {
               required: true,
-              message: `${intl.formatMessage({ id: 'valid_password' })}`
+              message: `${intl.formatMessage({ id: 'require_password' })}`
             }
           ]}
         >
-          <Input
+          <Input.Password
             prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
+            pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
+            title={intl.formatMessage({ id: 'valid_password' })}
             placeholder={intl.formatMessage({ id: 'password_placeholder' })}
           />
         </Form.Item>
@@ -91,7 +98,7 @@ LoginContainer.defaultProps = {
 const mapDispatchToProps = dispatch => {
   const { setUser } = loginContainerCreators;
   return {
-    dispatchSetUserData: (username, password) => dispatch(setUser(username, password))
+    dispatchSetUserData: (email, password) => dispatch(setUser(email, password))
   };
 };
 

@@ -10,10 +10,10 @@ const makeSelectLocation = () =>
     routerState => routerState.location
   );
 
-const selectUsername = () =>
+const selectUserEmail = () =>
   createSelector(
     selectLoginContainer,
-    userState => userState.username
+    userState => userState.email
   );
 
-export { makeSelectLocation, selectUsername };
+export { makeSelectLocation, selectUserEmail };

@@ -13,7 +13,7 @@ import { useHistory } from 'react-router-dom';
 import T from '@components/T';
 import { useInjectSaga } from 'utils/injectSaga';
 import { selectHomeContainer, selectReposData, selectReposError, selectRepoName } from './selectors';
-import { selectUsername } from '../App/selectors';
+import { selectUserEmail } from '../App/selectors';
 import { homeContainerCreators } from './reducer';
 import { loginContainerCreators } from '../LoginContainer/reducer';
 import saga from './saga';
@@ -50,7 +50,7 @@ export function HomeContainer({
   reposData,
   reposError,
   repoName,
-  username,
+  email,
   maxwidth,
   padding
 }) {
@@ -133,7 +133,7 @@ export function HomeContainer({
   };
   return (
     <Container maxwidth={maxwidth} padding={padding}>
-      {username ? (
+      {email ? (
         <React.Fragment>
           <RightContent>
             <Button
@@ -182,7 +182,7 @@ HomeContainer.propTypes = {
   }),
   reposError: PropTypes.object,
   repoName: PropTypes.string,
-  username: PropTypes.string,
+  email: PropTypes.string,
   history: PropTypes.object,
   maxwidth: PropTypes.number,
   padding: PropTypes.number
@@ -200,7 +200,7 @@ const mapStateToProps = createStructuredSelector({
   reposData: selectReposData(),
   reposError: selectReposError(),
   repoName: selectRepoName(),
-  username: selectUsername()
+  email: selectUserEmail()
 });
 
 function mapDispatchToProps(dispatch) {

@@ -22,14 +22,14 @@ import GlobalStyle from '@app/global-styles';
 import { colors } from '@themes';
 // import Header from '@components/Header';
 import For from '@components/For';
-import { selectUsername } from './selectors';
+import { selectUserEmail } from './selectors';
 
 const theme = {
   fg: colors.primary,
   bg: colors.secondary
 };
 
-export function App({ location, currentUser }) {
+export function App({ location, currentUserEmail }) {
   return (
     <ThemeProvider theme={theme}>
       {/* <Header /> */}
@@ -50,7 +50,7 @@ export function App({ location, currentUser }) {
                     ...routeConfig[routeKey].props
                   };
                   if (routeKey === 'login') {
-                    return currentUser ? <Redirect to="/home" /> : <Component {...updatedProps} />;
+                    return currentUserEmail ? <Redirect to="/home" /> : <Component {...updatedProps} />;
                   }
                   return <Component {...updatedProps} />;
                 }}
@@ -66,11 +66,11 @@ export function App({ location, currentUser }) {
 
 App.propTypes = {
   location: PropTypes.object,
-  currentUser: PropTypes.string
+  currentUserEmail: PropTypes.string
 };
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectUsername()
+  currentUserEmail: selectUserEmail()
 });
 
 const withConnect = connect(mapStateToProps);
