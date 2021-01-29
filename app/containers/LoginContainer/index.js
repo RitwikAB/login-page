@@ -25,8 +25,6 @@ const LoginContainer = ({ maxwidth, padding, dispatchSetUserData, intl }) => {
     dispatchSetUserData(values.email, values.password);
   };
 
-  // const validatePassword = (pwd) =>
-
   return (
     <Container maxwidth={maxwidth} padding={padding}>
       <T id="login_page" />

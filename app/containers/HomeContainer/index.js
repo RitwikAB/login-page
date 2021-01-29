@@ -55,7 +55,19 @@ export function HomeContainer({
   padding
 }) {
   useInjectSaga({ key: 'homeContainer', saga });
+
   const [loading, setLoading] = useState(false);
+
+  const [userLocation, setUserLocation] = useState({});
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(pos =>
+      setUserLocation({
+        latitude: pos.coords.latitude,
+        longitude: pos.coords.longitude
+      })
+    );
+  });
 
   useEffect(() => {
     const loaded = get(reposData, 'items', null) || reposError;
@@ -147,6 +159,7 @@ export function HomeContainer({
             </Button>
           </RightContent>
           <CustomCard title={intl.formatMessage({ id: 'repo_search' })} maxwidth={maxwidth}>
+            <T id="coordinate" values={{ latitude: userLocation.latitude, longitude: userLocation.longitude }} />
             <T marginBottom={10} id="get_repo_details" />
             <Search
               data-testid="search-bar"

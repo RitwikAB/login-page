@@ -20,5 +20,6 @@
   "valid_password": "The Password should contain atleast one lowercase, one uppercase and one numerical character",
   "log_in": "Log In",
   "sign_out": "Sign Out",
-  "access_denied": "Access Denied"
+  "access_denied": "Access Denied",
+  "coordinate": "Your current coordinates are latitude: {latitude}, longitude: {longitude}."
 }

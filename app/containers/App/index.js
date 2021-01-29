@@ -7,7 +7,7 @@
  *
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router-dom';
@@ -20,7 +20,6 @@ import { routeConfig } from '@app/routeConfig';
 import { ThemeProvider } from 'styled-components';
 import GlobalStyle from '@app/global-styles';
 import { colors } from '@themes';
-// import Header from '@components/Header';
 import For from '@components/For';
 import { selectUserEmail } from './selectors';
 
@@ -30,9 +29,12 @@ const theme = {
 };
 
 export function App({ location, currentUserEmail }) {
+  useEffect(() => {
+    localStorage.setItem('emailValueInLocalStorage', currentUserEmail);
+  }, [currentUserEmail]);
+
   return (
     <ThemeProvider theme={theme}>
-      {/* <Header /> */}
       <Layout.Content>
         <For
           ParentComponent={props => <Switch {...props} />}
@@ -67,6 +69,10 @@ export function App({ location, currentUserEmail }) {
 App.propTypes = {
   location: PropTypes.object,
   currentUserEmail: PropTypes.string
+};
+
+App.defaultProps = {
+  currentUserEmail: localStorage.getItem('emailValueInLocalStorage') || null
 };
 
 const mapStateToProps = createStructuredSelector({
