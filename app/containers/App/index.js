@@ -29,9 +29,10 @@ const theme = {
 };
 
 export function App({ location, currentUserEmail }) {
-  useEffect(() => {
-    localStorage.setItem('emailValueInLocalStorage', currentUserEmail);
-  }, [currentUserEmail]);
+  // below is causing bug
+  // useEffect(() => {
+  //   localStorage.setItem('emailValueInLocalStorage', currentUserEmail);
+  // }, [currentUserEmail]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -72,7 +73,7 @@ App.propTypes = {
 };
 
 App.defaultProps = {
-  currentUserEmail: localStorage.getItem('emailValueInLocalStorage') || null
+  currentUserEmail: null // || localStorage.getItem('emailValueInLocalStorage')
 };
 
 const mapStateToProps = createStructuredSelector({
