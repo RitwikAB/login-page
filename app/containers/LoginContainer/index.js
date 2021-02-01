@@ -52,6 +52,7 @@ const LoginContainer = ({ maxwidth, padding, dispatchSetUserData, intl }) => {
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
             placeholder={intl.formatMessage({ id: 'email_placeholder' })}
+            data-testid="email-textfield"
           />
         </Form.Item>
         <Form.Item
@@ -68,11 +69,18 @@ const LoginContainer = ({ maxwidth, padding, dispatchSetUserData, intl }) => {
             pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
             title={intl.formatMessage({ id: 'valid_password' })}
             placeholder={intl.formatMessage({ id: 'password_placeholder' })}
+            data-testid="password-textfield"
           />
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" className="login-form-button">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="login-form-button"
+            data-testid="login-button"
+            onClick={onFinish}
+          >
             <T id="log_in" />
           </Button>
         </Form.Item>
@@ -109,3 +117,5 @@ export default compose(
   injectIntl,
   withConnect
 )(LoginContainer);
+
+export const LoginContainerTest = compose(injectIntl)(LoginContainer);
