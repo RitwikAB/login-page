@@ -82,6 +82,7 @@ const LoginContainer = ({ maxwidth, padding, dispatchSetUserData, intl }) => {
             onClick={onFinish}
           >
             <T id="log_in" />
+            PR test
           </Button>
         </Form.Item>
       </Form>
