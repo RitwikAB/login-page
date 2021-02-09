@@ -9,7 +9,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import immutableTransform from 'redux-persist-transform-immutable';
 import storage from 'redux-persist/lib/storage';
 import createReducer from './reducers';
-
+// jsjsjsjsjs
 // redux persit configuration
 const persistConfig = {
   version: 1,
